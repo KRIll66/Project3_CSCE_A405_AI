@@ -15,6 +15,13 @@
 #
 #display()
 #the state of the board will need to be displayed after every move
+#
+#gameOver()
+#this check to see if conditions have been met to end the game
+#returns boolean
+#
+#getFinalScore()
+#calculates and prints the final score, declares a winner
 #################################################################
 
 
@@ -86,9 +93,8 @@ class owariBoard:
             self.getFinalScore()
             return True
 
-
-    def capture (self, turn, index):
-        
+    #capture handles the logic for capturing the opponents stones
+    def capture (self, turn, index):        
         if turn == "south":
             capture_index = self.capture_map_south.get(index)
             if self.board[capture_index] != 0:
@@ -102,7 +108,6 @@ class owariBoard:
                 print ("North gets to capture!!")
                 self.board[13] += self.board[capture_index]
                 self.board[capture_index] = 0
-
     
     
     def move (self, index):
