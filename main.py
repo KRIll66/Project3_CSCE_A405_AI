@@ -7,6 +7,7 @@ def main ():
     print ("Welcome to the Owari game, below is the starting board:")
     game.display()
     first = input("Who would you like to go first, North or South?\nEnter 'n' for North or 's' for South: ")
+    first = first.lower()
     while first != "n" and first != "s":        
         print ("Sorry, you must use 'n' for north or 's' for South")
         first = input("Who would you like to go first, North or South?\nEnter 'n' for North or 's' for South: ")
