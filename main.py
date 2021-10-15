@@ -1,23 +1,7 @@
-import owariBoard, util
+import owariBoard, util, math, random
 
 def main ():
-    game = owariBoard.owariBoard()  
-
-    #TODO: this is a test display
-    children = util.getChildren(game, game.board, False)
-    #print (children)
-    for child in children:
-        move = child[0]
-        child = child[1]
-        
-        
-        print ()
-        print ("Choosing move: ", move)
-        game.display(child)
-        print ()
-
-
-    
+    game = owariBoard.owariBoard()     
 
     #get the beginning input for the game to begin, allow players to select who goes first    
     print ("Welcome to the Owari game, below is the starting board:")
@@ -37,7 +21,9 @@ def main ():
         #first, check if it's norths turn
         if turn == "n":
             while True:
+
                 try:
+                    print ("North should move: ", random.randint(7, 12))
                     #get a valid move for North, must not be an empty reference and must be 7-12 inclusive
                     move_index = int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:"))
                     if move_index < 7 or move_index > 12:
@@ -53,6 +39,10 @@ def main ():
         else:
             while True:
                 try:
+                    alpha, best_move = util.minimax(game, game.board, 3, -math.inf, math.inf, True, None)
+
+                    print ("We should choose move: ", best_move)
+                    best_move = None
                     #get a valid move for South, must not be an empty reference and must be 0-5 inclusive
                     move_index = int(input("It is South's turn, please select a move from 0-5 (remember that south side counts up from left to right:"))
                     if move_index < 0 or move_index > 5:

@@ -32,7 +32,7 @@ class owariBoard:
     
     def __init__(self):
         #board represents the current state of the game
-        self.board = [1,1,1,1,1,1,0,1,1,1,1,1,1,0]                
+        self.board = [3,3,3,3,3,3,0,3,3,3,3,3,3,0]                
         self.alpha = 0
         self.beta = 0
         #capture maps link the opposite dishes to one another
@@ -103,15 +103,13 @@ class owariBoard:
     def capture (self, turn, index, board_state):        
         if turn == "south":
             capture_index = self.capture_map_south.get(index)
-            if board_state[capture_index] != 0:
-                print ("South gets to capture!!")
+            if board_state[capture_index] != 0:               
                 board_state[6] += board_state[capture_index]
                 board_state[capture_index] = 0
 
         if turn == "north":
             capture_index = self.capture_map_north.get(index)
-            if board_state[capture_index] != 0:
-                print ("North gets to capture!!")
+            if board_state[capture_index] != 0:             
                 board_state[13] += self.board[capture_index]
                 board_state[capture_index] = 0
         
