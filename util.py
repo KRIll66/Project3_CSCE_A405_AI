@@ -36,7 +36,7 @@ def getChildren (game_object, curr_state, is_max):
                 child = game_object.getChildMove(i, curr_state)
                 children.append([i,child])    
     else:
-        for i in range (6,13):
+        for i in range (7,13):
             if curr_state[i] > 0:
                 child = game_object.getChildMove(i, curr_state)
                 children.append([i, child])
@@ -79,7 +79,7 @@ def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move)
     #base case, we have reached the end of recursion or have finished the game down this 
     #search path, return utility of final state
     if depth == 0 or game_object.gameOver(curr_state):
-        eval = evaluate (game_object.board, curr_state)      
+        eval = evaluate(game_object.board, curr_state)
         return eval
 
 
