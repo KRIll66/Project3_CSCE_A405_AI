@@ -1,5 +1,16 @@
 class Node:
 
+    def __init__ (self, board, parent_index):
+        self.board = board
+        self.parent_index = parent_index
+
+
+
+
+        
+
+
+"""
     def __init__(self, parent, c0, c1, c2, c3, c4, c5):
         self.parent = parent
         self.c0 = c0
@@ -53,6 +64,6 @@ class Node:
 
     def get_c5(self):
         return self.c5
-
+"""
 
 
