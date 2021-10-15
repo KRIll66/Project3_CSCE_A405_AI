@@ -1,16 +1,34 @@
-import owariBoard
+import owariBoard, util
 
 def main ():
-    game = owariBoard.owariBoard()    
+    game = owariBoard.owariBoard()  
+
+    #TODO: this is a test display
+    children = util.getChildren(game, game.board, False)
+    #print (children)
+    for child in children:
+        move = child[0]
+        child = child[1]
+        
+        
+        print ()
+        print ("Choosing move: ", move)
+        game.display(child)
+        print ()
+
+
     
+
     #get the beginning input for the game to begin, allow players to select who goes first    
     print ("Welcome to the Owari game, below is the starting board:")
-    game.display()
+    game.display(game.board)
     first = input("Who would you like to go first, North or South?\nEnter 'n' for North or 's' for South: ")
+    first = first.lower()
     while first != "n" and first != "s":        
         print ("Sorry, you must use 'n' for north or 's' for South")
-        first = input("Who would you like to go first, North or South?\nEnter 'n' for North or 's' for South: ")
+        first = input("Who would you like to go first, North or South?\nEnter 'n' for North or 's' for South: ")        
         print ("You entered: ", first)
+        first = first.lower()
     turn = first
 
     #This loop handles game play, continues until a winner is decided
@@ -47,10 +65,10 @@ def main ():
             turn = "n"
 
         #make the move on the board and display the new game state
-        game.move(move_index)
-        game.display()
+        game.move(move_index, game.board)
+        game.display(game.board)
         #check to see if gameover conditions have been met
-        if game.gameOver(): break
+        if game.gameOver(game.board): break
 
 
 if __name__ == '__main__':

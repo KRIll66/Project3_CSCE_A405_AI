@@ -24,6 +24,7 @@
 #calculates and prints the final score, declares a winner
 #################################################################
 
+import copy
 
 class owariBoard:
     
@@ -31,7 +32,7 @@ class owariBoard:
     
     def __init__(self):
         #board represents the current state of the game
-        self.board = [3,3,3,3,3,3,0,3,3,3,3,3,3,0]                
+        self.board = [1,1,1,1,1,1,0,1,1,1,1,1,1,0]                
         self.alpha = 0
         self.beta = 0
         #capture maps link the opposite dishes to one another
@@ -52,14 +53,16 @@ class owariBoard:
             10: 2,
             11: 1,
             12: 0
-        }
-        
+        }        
 
-    def getFinalScore(self):
-        north_list = self.board[7:13]
-        south_list = self.board[0:6]
-        south_goal = self.board[6]
-        north_goal = self.board[13]
+
+    #TODO: modify this to receive a board array and calculate score based off that 
+    #TODO: received array, do not modify self.board   
+    def getFinalScore(self, final_board_state):
+        north_list = final_board_state[7:13]
+        south_list = final_board_state[0:6]
+        south_goal = final_board_state[6]
+        north_goal = final_board_state[13]
         #to tabulate the final score, whoever has stones left their side gets to conut them as points
         for v in north_list:
             north_goal += v
@@ -77,44 +80,97 @@ class owariBoard:
             print ("North has bested South for the last time!")
             print ("South's score: ", south_goal)
             print ("North's score: ", north_goal)
+        return south_goal, north_goal
         
-
+    
     #This checks for conditions that end a game, if met then it calls the getFinalScore method
-    def gameOver(self):              
-        north_list = self.board[7:13]
-        south_list = self.board[0:6]        
+    def gameOver(self, board_state):              
+        north_list = board_state[7:13]
+        south_list = board_state[0:6]        
         #check if north is empty, if so then game is over
         if all (v == 0 for v in north_list): 
-            self.getFinalScore()
+            self.getFinalScore(board_state)
             return True
 
         #next check if south is empty
         if all (v == 0 for v in south_list):
-            self.getFinalScore()
+            self.getFinalScore(board_state)
             return True
-
+        
+        return False
+    
     #capture handles the logic for capturing the opponents stones
-    def capture (self, turn, index):        
+    def capture (self, turn, index, board_state):        
         if turn == "south":
             capture_index = self.capture_map_south.get(index)
-            if self.board[capture_index] != 0:
+            if board_state[capture_index] != 0:
                 print ("South gets to capture!!")
-                self.board[6] += self.board[capture_index]
-                self.board[capture_index] = 0
+                board_state[6] += board_state[capture_index]
+                board_state[capture_index] = 0
 
         if turn == "north":
             capture_index = self.capture_map_north.get(index)
-            if self.board[capture_index] != 0:
+            if board_state[capture_index] != 0:
                 print ("North gets to capture!!")
-                self.board[13] += self.board[capture_index]
-                self.board[capture_index] = 0
-    
-    
-    def move (self, index):
+                board_state[13] += self.board[capture_index]
+                board_state[capture_index] = 0
+        
+        return board_state 
+   
+    def move (self, index, board_state):
         
         #get the value at the selected index, this is the number of available moves
-        num_moves = self.board[index]        
-        self.board[index]=0
+        num_moves = board_state[index]        
+        board_state[index]=0
+        
+        if index < 6:
+            turn = "south"
+        else: turn = "north"        
+        
+        while num_moves > 0:           
+            #this means that moves increment the index, north side moves decrement the index
+            if index < 7: 
+                index +=1                        
+                #we are south and this is the opponents goal, don't increment it, move back to index of 0
+                #if index == 6 and turn == "north":
+                #    index = 13           
+                #set index to 13 as that is the far right of the north side moves, log a goal for team south
+                if index == 6 and turn == "south":
+                    board_state[index]+=1                   
+                    #we are still in the south side, increment the value of the dish at index
+                else: 
+                    board_state[index]+=1                    
+
+            #this means that we are in the north side of the board
+            if index > 6:
+                index+=1
+                #this is the opponent and they have just scored, log score and move to index 0
+                if index == 13 and turn == "north":
+                    board_state[index]+=1
+                    index = -1
+                
+                else: 
+                    if index == 13: index = 0
+                    board_state[index]+=1                     
+                    
+            #performed a move, decrement move count
+            num_moves-=1        
+
+        #moves complete, check to see if the final move landed in an empty dish on the player's side
+        #if so, then all the stone's opposite now belong to the player
+        if board_state[index] == 1:
+            if turn == "south" and index <6:
+               board_state = self.capture(turn, index, self.board)
+            if turn == "north" and index > 6 and index < 13:
+                board_state = self.capture(turn, index, self.board)
+
+        return board_state
+
+    def getChildMove(self, index, current_state):
+        child_state = copy.deepcopy(current_state)
+        #get the value at the selected index, this is the number of available moves
+        num_moves = child_state[index]        
+        child_state[index]=0
         
         if index < 6:
             turn = "south"
@@ -130,41 +186,43 @@ class owariBoard:
                 #    index = 13           
                 #set index to 13 as that is the far right of the north side moves, log a goal for team south
                 if index == 6 and turn == "south":
-                    self.board[index]+=1                   
+                    child_state[index]+=1                   
                     #we are still in the south side, increment the value of the dish at index
                 else: 
-                    self.board[index]+=1                    
+                    child_state[index]+=1                    
 
             #this means that we are in the north side of the board
             if index > 6:
                 index+=1
                 #this is the opponent and they have just scored, log score and move to index 0
                 if index == 13 and turn == "north":
-                    self.board[index]+=1
+                    child_state[index]+=1
                     index = -1
                 
                 else: 
                     if index == 13: index = 0
-                    self.board[index]+=1                     
+                    child_state[index]+=1                     
                     
             #performed a move, decrement move count
             num_moves-=1
 
         #moves complete, check to see if the final move landed in an empty dish on the player's side
         #if so, then all the stone's opposite now belong to the player
-        if self.board[index] == 1:
+        if child_state[index] == 1:
             if turn == "south" and index <6:
-                self.capture(turn, index)
+                self.capture(turn, index, child_state)
             if turn == "north" and index > 6 and index < 13:
-                self.capture(turn, index)
+                self.capture(turn, index, child_state)
+
+        return child_state
 
 
 
-    def display (self):
+    def display (self, board_state):
         #display the board in a fashion that is clear and readable
         #first, we must reverse the north side of the list since it's indexes move from right to left
-        north_list = self.board[7:13]
+        north_list = board_state[7:13]
         north_list.reverse()
         print (" ", north_list)
-        print (self.board[13], "                  ", self.board[6])
-        print (" ", self.board[0:6])
+        print (board_state[13], "                  ", board_state[6])
+        print (" ", board_state[0:6])
