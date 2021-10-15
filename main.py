@@ -1,3 +1,4 @@
+from typing import Counter
 import owariBoard, util, math, random
 
 def main ():
@@ -29,7 +30,7 @@ def main ():
                             break
                     print ("North should move: ", north_move)
                     #get a valid move for North, must not be an empty reference and must be 7-12 inclusive
-                    move_index = int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:"))
+                    move_index = north_move#int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:"))
                     if move_index < 7 or move_index > 12:
                         print ("This is North's turn, input must be 7-12 inclusive")
                     elif game.board[move_index] == 0:
@@ -43,12 +44,11 @@ def main ():
         else:
             while True:
                 try:
-                    best_move = util.minimax(game, game.board, 7, -math.inf, math.inf, True, None)
-
+                    best_move = util.minimax(game, game.board, 7, -math.inf, math.inf, True, None)                  
                     print ("We should choose move: ", best_move)
-                    best_move = None
+                    #best_move = None
                     #get a valid move for South, must not be an empty reference and must be 0-5 inclusive
-                    move_index = int(input("It is South's turn, please select a move from 0-5 (remember that south side counts up from left to right:"))
+                    move_index = best_move#int(input("It is South's turn, please select a move from 0-5 (remember that south side counts up from left to right:"))
                     if move_index < 0 or move_index > 5:
                         print ("This is South's turn, input must be 0-5 inclusive")
                     elif game.board[move_index] == 0:
