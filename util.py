@@ -36,7 +36,7 @@ def getChildren (game_object, curr_state, is_max):
                 child = game_object.getChildMove(i, curr_state)
                 children.append([i,child])    
     else:
-        for i in range (6,13):
+        for i in range (7,13):
             if curr_state[i] > 0:
                 child = game_object.getChildMove(i, curr_state)
                 children.append([i, child])
