@@ -64,7 +64,7 @@ def main ():
         #check to see if gameover conditions have been met
         if game.gameOver(game.board): break
 
-    game.getFinalScore(game.board)
+    game.displayFinalScore(game.board)
 
 
 if __name__ == '__main__':
