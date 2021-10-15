@@ -26,7 +26,7 @@ def main ():
                     while True:
                         # north_move = random.randint(7, 12)
                         # if game.board[north_move] !=0:
-                        north_move = util.minimax(game, game.board, 11, -math.inf, math.inf, False, None)
+                        north_move = util.minimax(game, game.board, 13, -math.inf, math.inf, False, None)
                         if game.board[north_move] != 0:
                             break
                     print ("North should move: ", north_move)
@@ -45,7 +45,7 @@ def main ():
         else:
             while True:
                 try:
-                    best_move = util.minimax(game, game.board, 11, -math.inf, math.inf, True, None)
+                    best_move = util.minimax(game, game.board, 13, -math.inf, math.inf, True, None)
 
                     print ("We should choose move: ", best_move)
                     best_move = None
