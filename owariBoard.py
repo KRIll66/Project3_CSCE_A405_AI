@@ -68,6 +68,18 @@ class owariBoard:
             north_goal += v
         for v in south_list:
             south_goal += v
+        return south_goal, north_goal
+
+    def displayFinalScore (self, final_board_state):
+        north_list = final_board_state[7:13]
+        south_list = final_board_state[0:6]
+        south_goal = final_board_state[6]
+        north_goal = final_board_state[13]
+        #to tabulate the final score, whoever has stones left their side gets to conut them as points
+        for v in north_list:
+            north_goal += v
+        for v in south_list:
+            south_goal += v
 
         if south_goal == north_goal: 
             print("It's a tie!!")
@@ -89,12 +101,12 @@ class owariBoard:
         south_list = board_state[0:6]        
         #check if north is empty, if so then game is over
         if all (v == 0 for v in north_list): 
-            #self.getFinalScore(board_state)
+            self.getFinalScore(board_state)
             return True
 
         #next check if south is empty
         if all (v == 0 for v in south_list):
-            #self.getFinalScore(board_state)
+            self.getFinalScore(board_state)
             return True
         
         return False
