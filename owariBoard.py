@@ -89,12 +89,12 @@ class owariBoard:
         south_list = board_state[0:6]        
         #check if north is empty, if so then game is over
         if all (v == 0 for v in north_list): 
-            self.getFinalScore(board_state)
+            #self.getFinalScore(board_state)
             return True
 
         #next check if south is empty
         if all (v == 0 for v in south_list):
-            self.getFinalScore(board_state)
+            #self.getFinalScore(board_state)
             return True
         
         return False

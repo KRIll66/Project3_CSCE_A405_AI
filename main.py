@@ -23,7 +23,11 @@ def main ():
             while True:
 
                 try:
-                    print ("North should move: ", random.randint(7, 12))
+                    while True:
+                        north_move = random.randint(7, 12)
+                        if game.board[north_move] !=0:
+                            break
+                    print ("North should move: ", north_move)
                     #get a valid move for North, must not be an empty reference and must be 7-12 inclusive
                     move_index = int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:"))
                     if move_index < 7 or move_index > 12:
@@ -39,7 +43,7 @@ def main ():
         else:
             while True:
                 try:
-                    alpha, best_move = util.minimax(game, game.board, 3, -math.inf, math.inf, True, None)
+                    best_move = util.minimax(game, game.board, 7, -math.inf, math.inf, True, None)
 
                     print ("We should choose move: ", best_move)
                     best_move = None
@@ -59,6 +63,8 @@ def main ():
         game.display(game.board)
         #check to see if gameover conditions have been met
         if game.gameOver(game.board): break
+
+    game.getFinalScore(game.board)
 
 
 if __name__ == '__main__':

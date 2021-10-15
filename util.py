@@ -41,21 +41,48 @@ def getChildren (game_object, curr_state, is_max):
                 child = game_object.getChildMove(i, curr_state)
                 children.append([i, child])
 
-   # print ("In getChildren, children = ", children)
-
+   
+    #children takes the form of [[move[state]], [move[state]]]
     return children
 
 
 
+#minimax() does not actually handle the recursion, this function has the available first moves
+#it will send each first move to minimaxRecursion() and then assess which first move is the best
+def minimax (game_object, curr_state, depth, alpha, beta, is_max, move):
+    first_moves = getChildren(game_object, curr_state, is_max)  
+    best_alpha = -math.inf
+    best_move = None
+    alpha_list = []
+    moves = []
+    for move in first_moves:
+        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, False, move)
+        alpha_list.append(this_alpha)
+        moves.append(move[0])   
+    #find the best alpha value, store what move takes us here
+    index = 0    
+    for a in alpha_list:
+        if a > best_alpha:
+            best_move = moves[index]
+            best_alpha = a
+        index+=1
+
+    
+    return best_move
+    
+
 #TODO: assess best move, figure out how to pass it back
 #on initial call, alpha must be -inf and beta must be +inf
-def minimax (game_object, curr_state, depth, alpha, beta, is_max, move):
+def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move):
     best_move = move
+    
     #base case, we have reached the end of recursion or have finished the game down this 
     #search path, return utility of final state
     if depth == 0 or game_object.gameOver(curr_state):
-        eval = evaluate (game_object.board, curr_state), move        
+        eval = evaluate (game_object.board, curr_state)      
         return eval
+
+
 
     #this means we are on a maximizing level (it's our turn), initialize best value
     #to -inf, recurse through each child, and pass false for is_max to the recursion call
@@ -66,14 +93,15 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move):
             move = child[0]
             child = child[1]           
             #recursive call, continue down until we reach depth or game over state
-            utility = minimax(game_object,child,depth-1,alpha,beta,False, move)          
-            if alpha < utility[0]:           
-                alpha = utility[0]
-                best_move = utility[1]                
+            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,False, move)          
+            if alpha < utility:           
+                alpha = utility
+                              
             #opponent should not choose this move, prune this branch
             if beta <= alpha:
                 break      
-        return alpha, best_move
+        return alpha
+
     
     #this means we are on a mnimizing level (bad guy's turn), initialize best value
     #to inf, recurse through each child, and pass true for is_max to the recursion call
@@ -82,11 +110,11 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move):
         for child in children:
             move = child[0]
             child = child[1]            
-            utility = minimax(game_object,child,depth-1,alpha,beta,True,move)           
-            if beta > utility[0]:
-                beta = utility[0]
-                best_move = utility[1]
+            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,True,move)           
+            if beta > utility:
+                beta = utility
+                
             #opponent will not choose this move, prune this branch
             if beta <= alpha:
                 break
-        return beta, best_move
+        return beta
