@@ -137,35 +137,18 @@ class owariBoard:
             turn = "south"
         else: turn = "north"        
         
-        while num_moves > 0:           
-            #this means that moves increment the index, north side moves decrement the index
-            if index < 7: 
-                index +=1                        
-                #we are south and this is the opponents goal, don't increment it, move back to index of 0
-                #if index == 6 and turn == "north":
-                #    index = 13           
-                #set index to 13 as that is the far right of the north side moves, log a goal for team south
-                if index == 6 and turn == "south":
-                    board_state[index]+=1                   
-                    #we are still in the south side, increment the value of the dish at index
-                else: 
-                    board_state[index]+=1                    
-
-            #this means that we are in the north side of the board
-            if index > 6:
-                index+=1
-                #this is the opponent and they have just scored, log score and move to index 0
-                if index == 13 and turn == "north":
-                    board_state[index]+=1
-                    index = -1
-                
-                else: 
-                    if index == 13: index = 0
-                    board_state[index]+=1                     
-                    
-            #performed a move, decrement move count
-            num_moves-=1        
-
+        while num_moves > 0:
+            index += 1
+            #we cannot move outside of the board 
+            if index > 13: index = 0            
+            #north should not score in south's goal
+            if index == 6 and turn == "north": index = 7
+            #south should not score in north's goal
+            if index == 13 and turn == "south": index = 0
+            
+            board_state[index] += 1
+            num_moves -= 1
+            
         #moves complete, check to see if the final move landed in an empty dish on the player's side
         #if so, then all the stone's opposite now belong to the player
         if board_state[index] == 1:
