@@ -73,7 +73,7 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_l
     moves = []
     og_depth = depth
     for move in first_moves:
-        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, False, move, player_letter, og_depth, who_is_first)
+        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, is_max, move, player_letter, og_depth, who_is_first)
         alpha_list.append(this_alpha)
         moves.append(move[0])
     #find the best alpha value, store what move takes us here
