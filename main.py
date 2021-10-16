@@ -19,26 +19,28 @@ def main ():
     #All input is handled by user input
     while True:
         # set depth at the start of every other turn as needed.
-        if turn_count % 2 == 1:
+        
+        if turn_count % 2 == 1 and turn == "s":
             i_depth = int(input("\n*****\nWhat is minimax depth?\nInput must be a whole number greater than 0:"))
             while (i_depth < 0) or (i_depth % 1 != 0) :
                 print ("You entered: ", i_depth)        
                 print ("Sorry, you must use a whole number greater than 0. Try again:")
                 i_depth = input("What is minimax depth?\nInput must be a whole number greater than 0: ")    
+       
         #first, check if it's norths turn
         if turn == "n":
             while True:
 
                 try:
                     while True:
-                        # north_move = random.randint(7, 12)
+                        north_move = random.randint(7, 12)
                         # if game.board[north_move] !=0:
-                        north_move = util.minimax(game, game.board, i_depth, -math.inf, math.inf, False, None, turn)
+                        #north_move = util.minimax(game, game.board, i_depth, -math.inf, math.inf, False, None, turn)
                         if game.board[north_move] != 0:
                             break
                     print ("North should move: ", north_move)
                     #get a valid move for North, must not be an empty reference and must be 7-12 inclusive
-                    move_index = int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:\n"))
+                    move_index = north_move#int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:\n"))
                     if move_index < 7 or move_index > 12:
                         print ("This is North's turn, input must be 7-12 inclusive")
                     elif game.board[move_index] == 0:
@@ -55,9 +57,12 @@ def main ():
                     best_move = util.minimax(game, game.board, i_depth, -math.inf, math.inf, True, None, turn)
 
                     print ("We should choose move: ", best_move)
+                    #TODO - below statemetn autopopulates souths move, feel free to remove
+                    move_index = best_move
                     best_move = None
+
                     #get a valid move for South, must not be an empty reference and must be 0-5 inclusive
-                    move_index = int(input("It is South's turn, please select a move from 0-5 (remember that south side counts up from left to right:"))
+                    #move_index = int(input("It is South's turn, please select a move from 0-5 (remember that south side counts up from left to right:"))
 
 
                     if move_index < 0 or move_index > 5:
