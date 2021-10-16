@@ -21,7 +21,7 @@ import math, owariBoard
 def evaluate (game_object, original_board, current_board, turn):
     #value is going to see how many more points max has earned vs min
     #this can be greatly improved upon to try and cleverly decide the best direction to go down
-    if turn = "s":
+    if turn == "s":
         if game_object.gameOver(current_board): 
             south_goal, north_goal  = game_object.getFinalScore(current_board)
             value = south_goal - north_goal
