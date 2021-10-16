@@ -27,7 +27,8 @@ def evaluate (game_object, original_board, current_board, turn, depth, who_is_fi
             value = south_goal - north_goal
         else: 
             if depth > 10 :
-                value = random.randint(1, 36)
+                #value = random.randint(1, 36)
+                value = current_board[6] - original_board[13]
             else:
                 value = current_board[6] - original_board[13]
         #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
@@ -35,7 +36,7 @@ def evaluate (game_object, original_board, current_board, turn, depth, who_is_fi
         if game_object.gameOver(current_board): 
             south_goal, north_goal  = game_object.getFinalScore(current_board)
             value = north_goal - south_goal
-        else: value = original_board[13] - current_board[6]
+        else: value = current_board[13] - original_board[6]
         #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
     return value
 
