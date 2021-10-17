@@ -22,6 +22,7 @@ def evaluate (game_object, original_board, current_board, turn, depth, who_is_fi
     #value is going to see how many more points max has earned vs min
     #this can be greatly improved upon to try and cleverly decide the best direction to go down
     if turn == "s":
+        print("ITS SOUTH TURN")
         if game_object.gameOver(current_board): 
             south_goal, north_goal  = game_object.getFinalScore(current_board)
             value = south_goal - north_goal
@@ -33,6 +34,7 @@ def evaluate (game_object, original_board, current_board, turn, depth, who_is_fi
                 value = current_board[6] - original_board[13]
         #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
     else:
+        print("ITS NORTH TURN!")
         if game_object.gameOver(current_board): 
             south_goal, north_goal  = game_object.getFinalScore(current_board)
             value = north_goal - south_goal
