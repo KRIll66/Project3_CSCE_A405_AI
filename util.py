@@ -15,30 +15,47 @@
 
 import math, owariBoard, random
 
-#evalute will need a reference to the original state of the board prior to 
+def peek_one_level(current_board, player_letter, is_max):
+
+    capture_holes = []
+    if player_letter == 's':
+        i = 0
+        while i < 6:
+            if current_board[i] == 0:
+                capture_holes.add(i)
+        i = 0
+        j = 0
+        while i < 6:
+            while j < 6:
+                i = 0
+
+    if player_letter == 'n':
+        i = 7
+        while i < 13:
+            if current_board[i] == 0:
+                capture_holes.add(i)
+
+#evalute will need a reference to the original state of the board prior to
 #expanding the tree, this will allow it to check the "goodness" of a move
 #by comparing it to the state of the board at a leaf of the tree
 def evaluate (game_object, original_board, current_board, turn, depth, who_is_first):
     #value is going to see how many more points max has earned vs min
     #this can be greatly improved upon to try and cleverly decide the best direction to go down
     if turn == "s":
-        print("ITS SOUTH TURN")
+        print("IT'S SOUTHS TURN")
         if game_object.gameOver(current_board): 
-            south_goal, north_goal  = game_object.getFinalScore(current_board)
+            south_goal, north_goal = game_object.getFinalScore(current_board)
             value = south_goal - north_goal
-        else: 
-            if depth > 10 :
-                #value = random.randint(1, 36)
-                value = current_board[6] - original_board[13]
-            else:
-                value = current_board[6] - original_board[13]
+        else:
+            value = current_board[6] - original_board[13]
         #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
     else:
-        print("ITS NORTH TURN!")
+        print("IT'S NORTHS TURN!")
         if game_object.gameOver(current_board): 
-            south_goal, north_goal  = game_object.getFinalScore(current_board)
+            south_goal, north_goal = game_object.getFinalScore(current_board)
             value = north_goal - south_goal
-        else: value = current_board[13] - original_board[6]
+        else:
+            value = current_board[13] - original_board[6]
         #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
     return value
 
@@ -85,7 +102,6 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_l
             best_move = moves[index]
             best_alpha = a
         index+=1
-
     
     return best_move
     
@@ -96,7 +112,7 @@ def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move,
     #base case, we have reached the end of recursion or have finished the game down this 
     #search path, return utility of final state
     if depth == 0 or game_object.gameOver(curr_state):       
-        eval = evaluate(game_object, game_object.board, curr_state, player_letter, og_depth, who_is_first )
+        eval = evaluate(game_object, game_object.board, curr_state, player_letter, og_depth, who_is_first)
         return eval
 
     #this means we are on a maximizing level (it's our turn), initialize best value

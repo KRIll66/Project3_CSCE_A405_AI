@@ -20,13 +20,13 @@ def main ():
     while True:
         # set depth at the start of every other turn as needed.
         i_depth = 1
-        if turn_count % 2 == 1 and turn == "s":
-            i_depth = int(input("\n*****\nWhat is minimax depth?\nInput must be a whole number greater than 0:"))
-            while (i_depth < 0) or (i_depth % 1 != 0) :
-                print ("You entered: ", i_depth)        
-                print ("Sorry, you must use a whole number greater than 0. Try again:")
-                i_depth = input("What is minimax depth?\nInput must be a whole number greater than 0: ")    
-       
+        #if turn_count % 2 == 1 and turn == "s":
+        i_depth = int(input("\n*****\nWhat is minimax depth?\nInput must be a whole number greater than 0:"))
+        while (i_depth < 0) or (i_depth % 1 != 0) :
+            print ("You entered: ", i_depth)
+            print ("Sorry, you must use a whole number greater than 0. Try again:")
+            i_depth = input("What is minimax depth?\nInput must be a whole number greater than 0: ")
+
         #first, check if it's norths turn
         if turn == "n":
             while True:
