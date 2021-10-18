@@ -19,16 +19,14 @@ def main ():
     #All input is handled by user input
     while True:
         # set depth at the start of every other turn as needed.
-        s_depth = 7
-        n_depth = 5
-        """
-        if turn_count % 2 == 1 and turn == "s":
-            i_depth = int(input("\n*****\nWhat is minimax depth?\nInput must be a whole number greater than 0:"))
-            while (i_depth < 0) or (i_depth % 1 != 0) :
-                print ("You entered: ", i_depth)        
-                print ("Sorry, you must use a whole number greater than 0. Try again:")
-                i_depth = input("What is minimax depth?\nInput must be a whole number greater than 0: ")    
-        """
+        i_depth = 5
+        #if turn_count % 2 == 1 and turn == "s":
+        #i_depth = int(input("\n*****\nWhat is minimax depth?\nInput must be a whole number greater than 0:"))
+        while (i_depth < 0) or (i_depth % 1 != 0) :
+            print ("You entered: ", i_depth)
+            print ("Sorry, you must use a whole number greater than 0. Try again:")
+            i_depth = input("What is minimax depth?\nInput must be a whole number greater than 0: ")
+
         #first, check if it's norths turn
         if turn == "n":
             while True:
@@ -37,7 +35,7 @@ def main ():
                     while True:
                         #north_move = random.randint(7, 12)
                         # if game.board[north_move] !=0:
-                        north_move = util.minimax(game, game.board, n_depth, -math.inf, math.inf, False, None, turn, "s")
+                        north_move = util.minimax(game, game.board, i_depth, -math.inf, math.inf, False, None, turn, "s", first)
                         if game.board[north_move] != 0:
                             break
                     print ("North should move: ", north_move)
@@ -56,7 +54,7 @@ def main ():
         else:
             while True:
                 try:
-                    best_move = util.minimax(game, game.board, s_depth, -math.inf, math.inf, True, None, turn, "n")
+                    best_move = util.minimax(game, game.board, i_depth, -math.inf, math.inf, True, None, turn, "n", first)
 
                     print ("We should choose move: ", best_move)
                     #TODO - below statemetn autopopulates souths move, feel free to remove

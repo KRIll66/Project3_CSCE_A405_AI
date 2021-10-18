@@ -5,11 +5,6 @@ class Node:
         self.parent_index = parent_index
 
 
-
-
-        
-
-
 """
     def __init__(self, parent, c0, c1, c2, c3, c4, c5):
         self.parent = parent

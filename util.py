@@ -13,21 +13,43 @@
 ###################################################################
 
 
-import math, owariBoard
+import math, owariBoard, random
 
-#evalute will need a reference to the original state of the board prior to 
+def peek_one_level(current_board, player_letter, is_max):
+
+    capture_holes = []
+    if player_letter == 's':
+        i = 0
+        while i < 6:
+            if current_board[i] == 0:
+                capture_holes.add(i)
+        i = 0
+        j = 0
+        while i < 6:
+            while j < 6:
+                i = 0
+
+    if player_letter == 'n':
+        i = 7
+        while i < 13:
+            if current_board[i] == 0:
+                capture_holes.add(i)
+
+#evalute will need a reference to the original state of the board prior to
 #expanding the tree, this will allow it to check the "goodness" of a move
 #by comparing it to the state of the board at a leaf of the tree
-def evaluate (game_object, original_board, current_board, turn):
+def evaluate (game_object, original_board, current_board, turn, depth, who_is_first):
     #value is going to see how many more points max has earned vs min
     #this can be greatly improved upon to try and cleverly decide the best direction to go down
     if turn == "s":
+        #print("IT'S SOUTHS TURN")
         if game_object.gameOver(current_board): 
-            south_goal, north_goal  = game_object.getFinalScore(current_board)
+            south_goal, north_goal = game_object.getFinalScore(current_board)
             value = south_goal - north_goal
         else: value = current_board[6] - current_board[13]
         #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
     else:
+        #print("IT'S NORTHS TURN!")
         if game_object.gameOver(current_board): 
             south_goal, north_goal  = game_object.getFinalScore(current_board)
             value = north_goal - south_goal        
@@ -60,14 +82,15 @@ def getChildren (game_object, curr_state, player_letter):
 
 #minimax() does not actually handle the recursion, this function has the available first moves
 #it will send each first move to minimaxRecursion() and then assess which first move is the best
-def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_letter, other_player_letter):
+def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_letter, other_player_letter, who_is_first):
     first_moves = getChildren(game_object, curr_state, player_letter)
     best_alpha = -math.inf
     best_move = None
     alpha_list = []
     moves = []
+    og_depth = depth
     for move in first_moves:
-        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, False, move, player_letter, other_player_letter)
+        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, is_max, move, player_letter,other_player_letter, og_depth, who_is_first)
         alpha_list.append(this_alpha)
         moves.append(move[0])
     #find the best alpha value, store what move takes us here
@@ -85,12 +108,11 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_l
 
 #TODO: assess best move, figure out how to pass it back
 #on initial call, alpha must be -inf and beta must be +inf
-def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move, player_letter, other_player_letter):
-   
+def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move, player_letter, other_player_letter, og_depth, who_is_first):
     #base case, we have reached the end of recursion or have finished the game down this 
     #search path, return utility of final state
     if depth == 0 or game_object.gameOver(curr_state):       
-        eval = evaluate(game_object, game_object.board, curr_state, player_letter)
+        eval = evaluate(game_object, game_object.board, curr_state, player_letter, og_depth, who_is_first)
         return eval
 
     #this means we are on a maximizing level (it's our turn), initialize best value
@@ -102,8 +124,10 @@ def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move,
             move = child[0]
             child = child[1]           
             #recursive call, continue down until we reach depth or game over state
-            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,False, move, player_letter, other_player_letter)
-            alpha = max(utility, alpha)            
+            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,False, move, player_letter, other_player_letter, og_depth, who_is_first)
+            if alpha < utility:           
+                alpha = utility
+                              
             #opponent should not choose this move, prune this branch
             if beta <= alpha:
                 break      
@@ -116,9 +140,10 @@ def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move,
         for child in children:
             move = child[0]
             child = child[1]            
-            #recursive call, continue down until we reach depth or game over state
-            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,True,move,player_letter, other_player_letter)
-            beta = min (beta, utility)                
+            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,True,move, player_letter, other_player_letter, og_depth, who_is_first)
+            if beta > utility:
+                beta = utility
+                
             #opponent will not choose this move, prune this branch
             if beta <= alpha:
                 break
