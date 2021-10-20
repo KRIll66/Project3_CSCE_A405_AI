@@ -41,20 +41,18 @@ def peek_one_level(current_board, player_letter, is_max):
 def evaluate (game_object, original_board, current_board, turn, depth, who_is_first):
     #value is going to see how many more points max has earned vs min
     #this can be greatly improved upon to try and cleverly decide the best direction to go down
-    if turn == "s":
-        #print("IT'S SOUTHS TURN")
+    if turn == "s":       
         if game_object.gameOver(current_board): 
             south_goal, north_goal = game_object.getFinalScore(current_board)
             value = south_goal - north_goal
         else: value = current_board[6] - current_board[13]
-        #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
-    else:
-        #print("IT'S NORTHS TURN!")
+        
+    else:      
         if game_object.gameOver(current_board): 
             south_goal, north_goal  = game_object.getFinalScore(current_board)
             value = north_goal - south_goal        
         else: value = current_board[13] - current_board[6]
-        #print ("The passed in board states are ", game_object.display(original_board), "\nand ", game_object.display(current_board), "\n Value is assessed as: ", value )
+       
     return value
 
 
@@ -67,13 +65,12 @@ def getChildren (game_object, curr_state, player_letter):
         for i in range (0,6):
             if curr_state[i] > 0:
                 child = game_object.getChildMove(i, curr_state)
-                children.append([i,child])    
+                children.append([i, child])    
     else:
         for i in range (7,13):
             if curr_state[i] > 0:
                 child = game_object.getChildMove(i, curr_state)
                 children.append([i, child])
-
    
     #children takes the form of [[move[state]], [move[state]]]
     return children
@@ -90,7 +87,7 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_l
     moves = []
     og_depth = depth
     for move in first_moves:
-        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, False, move, player_letter,other_player_letter, og_depth, who_is_first)
+        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, True, move, player_letter,other_player_letter, og_depth, who_is_first)
         alpha_list.append(this_alpha)
         moves.append(move[0])
     #find the best alpha value, store what move takes us here
@@ -118,33 +115,33 @@ def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move,
     #this means we are on a maximizing level (it's our turn), initialize best value
     #to -inf, recurse through each child, and pass false for is_max to the recursion call
     if is_max:
-        children = getChildren(game_object, curr_state, player_letter)
-        #print ("In minimax, children = ", children)
+        utility = -math.inf
+        children = getChildren(game_object, curr_state, player_letter)       
         for child in children:          
             move = child[0]
-            child = child[1]           
-            #recursive call, continue down until we reach depth or game over state
+            child = child[1] 
             utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,False, move, player_letter, other_player_letter, og_depth, who_is_first)
-            if alpha < utility:           
-                alpha = utility
-                              
-            #opponent should not choose this move, prune this branch
-            if beta <= alpha:
-                break      
-        return alpha
+            
+            if utility >= beta:           
+                break
+            alpha = max(alpha, utility)               
+                     
+        return utility
     
     #this means we are on a mnimizing level (bad guy's turn), initialize best value
     #to inf, recurse through each child, and pass true for is_max to the recursion call
-    else:       
+    else:  
+        utility = math.inf     
         children = getChildren(game_object, curr_state, other_player_letter)
         for child in children:
             move = child[0]
             child = child[1]            
-            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,True,move, player_letter, other_player_letter, og_depth, who_is_first)
-            if beta > utility:
-                beta = utility
-                
-            #opponent will not choose this move, prune this branch
-            if beta <= alpha:
+            utility = minimaxRecursion(game_object,child,depth-1,alpha,beta,True, move, player_letter, other_player_letter, og_depth, who_is_first)
+            
+            if utility <= alpha:
                 break
-        return beta
+            beta = min(beta, utility)
+        
+        return utility
+                
+            
