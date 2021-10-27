@@ -18,18 +18,17 @@ def main ():
     #This loop handles game play, continues until a winner is decided
     #All input is handled by user input
     while True:
-        n_depth = 9
-        s_depth = 9
+        n_depth = 3
+        s_depth = 3
         #first, check if it's norths turn
         if turn == "n":
             while True:
 
                 try:                    
-                    north_move = util.minimax(game, game.board, n_depth, -math.inf, math.inf, True, None, turn, "s", first)                        
+                    north_move = util.minimax(game, game.board, n_depth, -math.inf, math.inf, True, None, turn, "s", first)
                     print ("North should move: ", north_move)
                     #get a valid move for North, must not be an empty reference and must be 7-12 inclusive
-                    #move_index = north_move
-                    move_index = int(input("It is North's turn, please select a move from 7-12 (remember that north side counts up from right to left:\n"))
+                    move_index = north_move
                     if move_index < 7 or move_index > 12:
                         print ("This is North's turn, input must be 7-12 inclusive")
                     elif game.board[move_index] == 0:
@@ -43,9 +42,9 @@ def main ():
         else:
             while True:
                 try:
-                    move_index = util.minimax(game, game.board, s_depth, -math.inf, math.inf, True, None, turn, "n", first)
-                    print ("We should choose move: ", move_index)         
-
+                    move_index = util.minimax(game, game.board, s_depth, -math.inf, math.inf, False, None, turn, "n", first)
+                    #  print ("South should choose move: ", move_index)
+                    move_index = int(input())
                     if move_index < 0 or move_index > 5:
                         print ("This is South's turn, input must be 0-5 inclusive")
                     elif game.board[move_index] == 0:

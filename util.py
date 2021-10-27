@@ -87,7 +87,7 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_l
     moves = []
     og_depth = depth
     for move in first_moves:
-        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, True, move, player_letter,other_player_letter, og_depth, who_is_first)
+        this_alpha = minimaxRecursion(game_object, move[1], depth-1, alpha, beta, True, move, player_letter, other_player_letter, og_depth, who_is_first)
         alpha_list.append(this_alpha)
         moves.append(move[0])
     #find the best alpha value, store what move takes us here
@@ -101,10 +101,8 @@ def minimax (game_object, curr_state, depth, alpha, beta, is_max, move, player_l
     return best_move
 
 
-
-
-#TODO: assess best move, figure out how to pass it back
-#on initial call, alpha must be -inf and beta must be +inf
+# TODO: assess best move, figure out how to pass it back
+# on initial call, alpha must be -inf and beta must be +inf
 def minimaxRecursion (game_object, curr_state, depth, alpha, beta, is_max, move, player_letter, other_player_letter, og_depth, who_is_first):
     #base case, we have reached the end of recursion or have finished the game down this 
     #search path, return utility of final state
